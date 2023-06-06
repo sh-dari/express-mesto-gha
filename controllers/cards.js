@@ -19,9 +19,10 @@ module.exports.deleteCard = (req, res, next) => {
     })
     .catch(err => {
       if (err.name === 'CastError') {
-        return next(new ValidationError('Некорректные данные'));
+        next(new ValidationError('Некорректные данные'));
+      } else {
+        next(err);
       }
-      next(err);
     });
 };
 
@@ -45,9 +46,10 @@ module.exports.likeCard = (req, res, next) => {
     .then(data => handleResponse(res, data))
     .catch(err => {
       if (err.name === 'CastError') {
-        return next(new ValidationError('Некорректные данные'));
+        next(new ValidationError('Некорректные данные'));
+      } else {
+        next(err);
       }
-      next(err);
     });
 }
 
@@ -63,8 +65,9 @@ module.exports.dislikeCard = (req, res, next) => {
     .then(data => handleResponse(res, data))
     .catch(err => {
       if (err.name === 'CastError') {
-        return next(new ValidationError('Некорректные данные'));
+        next(new ValidationError('Некорректные данные'));
+      } else {
+        next(err);
       }
-      next(err);
     });
 }
