@@ -1,5 +1,5 @@
 const NOT_FOUND_ERROR_CODE = 404;
-const INVALID_DATA_ERROR_CODE = 404;
+const INVALID_DATA_ERROR_CODE = 400;
 
 module.exports = (err, req, res, next) => {
   const { statusCode = 500, message } = err;
@@ -7,7 +7,7 @@ module.exports = (err, req, res, next) => {
     res.status(NOT_FOUND_ERROR_CODE).send({ message: 'Пользователь/карточка не найден/a' });
     return;
   }
-  if (err.name === 'InvalidDataError') {
+  if (err.name === 'ValidationError') {
     res.status(INVALID_DATA_ERROR_CODE).send({ message: 'Переданы некорректные данные' });
     return;
   }

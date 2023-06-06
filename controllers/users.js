@@ -1,6 +1,5 @@
 const User = require('../models/user');
 const NotFoundError = require('../errors/NotFoundError');
-const InvalidDataError = require('../errors/InvalidDataError');
 const handleResponse = (res, data) => res.status(200).send(data);
 
 module.exports.getUsers = (req, res, next) => {
@@ -24,12 +23,7 @@ module.exports.createUser = (req, res, next) => {
   const { name, about, avatar } = req.body;
 
   User.create({ name, about, avatar })
-    .then(data => {
-      if (!data) {
-        throw new InvalidDataError('Неверные данные');
-      }
-      handleResponse(res, data);
-    })
+    .then(data => handleResponse(res, data))
     .catch(next);
 };
 
@@ -41,12 +35,7 @@ module.exports.updateProfile = (req, res, next) => {
     { name, about },
     { new: true },
   )
-    .then(data => {
-      if (!data) {
-        throw new InvalidDataError('Неверные данные');
-      }
-      handleResponse(res, data);
-    })
+    .then(data => handleResponse(res, data))
     .catch(next);
 };
 
@@ -58,11 +47,6 @@ module.exports.updateAvatar = (req, res, next) => {
     { avatar },
     { new: true },
   )
-    .then(data => {
-      if (!data) {
-        throw new InvalidDataError('Неверные данные');
-      }
-      handleResponse(res, data);
-    })
+    .then(data => handleResponse(res, data))
     .catch(next);
 };

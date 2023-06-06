@@ -1,6 +1,5 @@
 const Card = require('../models/card');
 const NotFoundError = require('../errors/NotFoundError');
-const InvalidDataError = require('../errors/InvalidDataError');
 const handleResponse = (res, data) => res.status(200).send(data);
 
 module.exports.getCards = (req, res, next) => {
@@ -24,12 +23,7 @@ module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
   const owner = req.user._id;
   Card.create({ name, link, owner })
-    .then(data => {
-      if (!data) {
-        throw new InvalidDataError('Неверные данные');
-      }
-      handleResponse(res, data);
-    })
+    .then(data => handleResponse(res, data))
     .catch(next);
 };
 
