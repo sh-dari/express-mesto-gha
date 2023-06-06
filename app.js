@@ -1,5 +1,6 @@
 const cardRoute = require('./routes/cards');
 const userRoute = require('./routes/users');
+const NotFoundError = require('./errors/NotFoundError');
 const errorHandler = require('./middlewares/errorHandler');
 const express = require('express');
 const mongoose = require('mongoose');
@@ -21,6 +22,9 @@ app.use((req, res, next) => {
 });
 app.use('/users', userRoute);
 app.use('/cards', cardRoute);
+app.use((req, res, next) => {
+  next(new NotFoundError('Указан неправильный путь'));
+});
 app.use(errorHandler);
 
 app.listen(PORT)

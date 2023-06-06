@@ -1,5 +1,6 @@
 const Card = require('../models/card');
 const NotFoundError = require('../errors/NotFoundError');
+const ValidationError = require('../errors/ValidationError');
 const handleResponse = (res, data) => res.status(200).send(data);
 
 module.exports.getCards = (req, res, next) => {
@@ -33,8 +34,16 @@ module.exports.likeCard = (req, res, next) => {
     { $addToSet: { likes: req.user._id } },
     { new: true },
   )
+    .orFail(() => {
+      throw new NotFoundError('Запрашиваемая карточка не найдена');
+    })
     .then(data => handleResponse(res, data))
-    .catch(next);
+    .catch(err => {
+      if (err.name === 'CastError') {
+        return next(new ValidationError('Некорректные данные'));
+      }
+      next(err);
+    });
 }
 
 module.exports.dislikeCard = (req, res, next) => {
@@ -43,6 +52,14 @@ module.exports.dislikeCard = (req, res, next) => {
     { $pull: { likes: req.user._id } },
     { new: true },
   )
+    .orFail(() => {
+      throw new NotFoundError('Запрашиваемая карточка не найдена');
+    })
     .then(data => handleResponse(res, data))
-    .catch(next);
+    .catch(err => {
+      if (err.name === 'CastError') {
+        return next(new ValidationError('Некорректные данные'));
+      }
+      next(err);
+    });
 }

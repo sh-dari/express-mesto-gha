@@ -33,7 +33,7 @@ module.exports.updateProfile = (req, res, next) => {
   User.findByIdAndUpdate(
     req.user._id,
     { name, about },
-    { new: true },
+    { new: true, runValidators: true },
   )
     .then(data => handleResponse(res, data))
     .catch(next);
@@ -45,7 +45,7 @@ module.exports.updateAvatar = (req, res, next) => {
   User.findByIdAndUpdate(
     req.user._id,
     { avatar },
-    { new: true },
+    { new: true, runValidators: true },
   )
     .then(data => handleResponse(res, data))
     .catch(next);
