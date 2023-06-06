@@ -4,4 +4,4 @@ module.exports = class ValidationError extends Error {
     this.name = 'ValidationError';
     this.statusCode = 400;
   }
-}
+};
