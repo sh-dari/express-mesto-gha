@@ -17,7 +17,12 @@ module.exports.deleteCard = (req, res, next) => {
       }
       handleResponse(res, data);
     })
-    .catch(next);
+    .catch(err => {
+      if (err.name === 'CastError') {
+        return next(new ValidationError('Некорректные данные'));
+      }
+      next(err);
+    });
 };
 
 module.exports.createCard = (req, res, next) => {

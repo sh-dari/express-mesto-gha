@@ -1,5 +1,6 @@
 const User = require('../models/user');
 const NotFoundError = require('../errors/NotFoundError');
+const ValidationError = require('../errors/ValidationError');
 const handleResponse = (res, data) => res.status(200).send(data);
 
 module.exports.getUsers = (req, res, next) => {
@@ -16,7 +17,12 @@ module.exports.getUser = (req, res, next) => {
       }
       handleResponse(res, data);
     })
-    .catch(next);
+    .catch(err => {
+      if (err.name === 'CastError') {
+        return next(new ValidationError('Некорректные данные'));
+      }
+      next(err);
+    });
 };
 
 module.exports.createUser = (req, res, next) => {
