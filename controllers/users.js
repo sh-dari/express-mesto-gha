@@ -5,7 +5,7 @@ const ValidationError = require('../errors/ValidationError');
 
 const handleResponse = (res, data) => res.status(200).send(data);
 
-const update = (req, res, next, userData) => {
+const updateUser = (req, res, next, userData) => {
   User.findByIdAndUpdate(
     req.user._id,
     userData,
@@ -48,10 +48,10 @@ module.exports.createUser = (req, res, next) => {
 
 module.exports.updateProfile = (req, res, next) => {
   const { name, about } = req.body;
-  update(req, res, next, { name, about });
+  updateUser(req, res, next, { name, about });
 };
 
 module.exports.updateAvatar = (req, res, next) => {
   const { avatar } = req.body;
-  update(req, res, next, { avatar });
+  updateUser(req, res, next, { avatar });
 };
