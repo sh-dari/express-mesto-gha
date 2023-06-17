@@ -36,7 +36,8 @@ module.exports.login = (req, res, next) => {
       res
         .cookie('jwt', token, {
           maxAge: 3600000,
-          // httpOnly: true,
+          httpOnly: true,
+          sameSite: false,
         })
         .send(req.cookies.jwt);
     })
@@ -94,16 +95,18 @@ module.exports.createUser = (req, res, next) => {
         email,
         password: hash,
       })
-        .then((data) => handleResponse(res, data))
-        .catch(next);
+        .then(() => handleResponse(res, {
+          name, about, avatar, email,
+        }))
+        .catch((err) => {
+          if (err.code === 11000) {
+            next(new ConflictError('Такой пользователь уже существует'));
+          } else {
+            next(err);
+          }
+        });
     })
-    .catch((err) => {
-      if (err.code === 11000) {
-        next(new ConflictError('Такой пользователь уже существует'));
-      } else {
-        next(err);
-      }
-    });
+    .catch(next);
 };
 
 module.exports.updateProfile = (req, res, next) => {
