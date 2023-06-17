@@ -95,13 +95,14 @@ module.exports.createUser = (req, res, next) => {
         password: hash,
       })
         .then((data) => handleResponse(res, data))
-        .catch((err) => {
-          if (err.code === 11000) {
-            next(new ConflictError('Такой пользователь уже существует'));
-          } else {
-            next(err);
-          }
-        });
+        .catch(next);
+    })
+    .catch((err) => {
+      if (err.code === 11000) {
+        next(new ConflictError('Такой пользователь уже существует'));
+      } else {
+        next(err);
+      }
     });
 };
 
