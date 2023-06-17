@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Card = require('../models/card');
 const NotFoundError = require('../errors/NotFoundError');
 const ValidationError = require('../errors/ValidationError');
+const ForbiddenError = require('../errors/ForbiddenError');
 
 const handleResponse = (res, data) => res.status(200).send(data);
 
@@ -31,10 +32,20 @@ module.exports.getCards = (req, res, next) => {
 };
 
 module.exports.deleteCard = (req, res, next) => {
-  Card.findByIdAndRemove(req.params.cardId)
+  Card.findById(req.params.cardId)
     .then((data) => {
       if (!data) {
         throw new NotFoundError('Запрашиваемая карточка не найдена');
+      }
+      const owner = data.owner.toString();
+      if (req.user._id === owner) {
+        Card.deleteOne(data)
+          .then(() => {
+            res.send(data);
+          })
+          .catch(next);
+      } else {
+        throw new ForbiddenError('Невозможно удалить чужую карточку');
       }
       handleResponse(res, data);
     })
