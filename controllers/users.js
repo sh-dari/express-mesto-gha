@@ -39,7 +39,7 @@ module.exports.login = (req, res, next) => {
           httpOnly: true,
           sameSite: false,
         })
-        .send(req.cookies.jwt);
+        .send({ token: req.cookies.jwt });
     })
     .catch(() => {
       next(new UnauthorizedError('Пользователь не авторизован'));
