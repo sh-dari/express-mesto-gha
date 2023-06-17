@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { REG_EXP } = require('../utils/constants');
 
 const cardSchema = new mongoose.Schema({
   name: {
@@ -10,6 +11,10 @@ const cardSchema = new mongoose.Schema({
   link: {
     type: String,
     required: true,
+    validate: {
+      validator: (v) => REG_EXP.test(v),
+      message: 'Неверная ссылка на аватар',
+    },
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,

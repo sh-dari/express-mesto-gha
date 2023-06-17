@@ -47,7 +47,6 @@ module.exports.deleteCard = (req, res, next) => {
       } else {
         throw new ForbiddenError('Невозможно удалить чужую карточку');
       }
-      handleResponse(res, data);
     })
     .catch((err) => {
       if (err instanceof mongoose.CastError) {
@@ -62,7 +61,7 @@ module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
   const owner = req.user._id;
   Card.create({ name, link, owner })
-    .then((data) => handleResponse(res, data))
+    .then((data) => res.status(201).send(data))
     .catch(next);
 };
 

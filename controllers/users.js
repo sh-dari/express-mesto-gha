@@ -95,7 +95,7 @@ module.exports.createUser = (req, res, next) => {
         email,
         password: hash,
       })
-        .then(() => handleResponse(res, {
+        .then(() => res.status(201).send({
           name, about, avatar, email,
         }))
         .catch((err) => {
